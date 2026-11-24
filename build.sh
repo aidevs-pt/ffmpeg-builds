@@ -37,7 +37,8 @@ case $target in
   windows-x64)
     triple=x86_64-w64-mingw32
     export CC=$triple-gcc-posix CXX=$triple-g++-posix AR=$triple-ar RANLIB=$triple-ranlib
-    export CFLAGS="-O2" CXXFLAGS="-O2" LDFLAGS="-static -static-libgcc -static-libstdc++"
+    # Static libraries: without FRIBIDI_LIB_STATIC, fribidi's headers ask for DLL imports.
+    export CFLAGS="-O2 -DFRIBIDI_LIB_STATIC" CXXFLAGS="-O2" LDFLAGS="-static -static-libgcc -static-libstdc++"
     host="--host=$triple"
     cross="--arch=x86_64 --target-os=mingw32 --cross-prefix=$triple- --cc=$CC --cxx=$CXX"
     cat > "$work/cross.ini" <<EOF
@@ -125,7 +126,8 @@ dir=$(source_dir ffmpeg)
   --disable-autodetect --disable-network \
   --enable-zlib --enable-libx264 --enable-libmp3lame --enable-libfreetype --enable-libharfbuzz \
   --enable-libfribidi --enable-libass --enable-libdav1d $ffmpeg_platform \
-  && make -j"$jobs" && make install)
+  || { tail -60 ffbuild/config.log >&2; exit 1; }
+  make -j"$jobs" && make install)
 
 exe=""; [ "$target" = windows-x64 ] && exe=.exe
 strip_tool=strip; [ "$target" = windows-x64 ] && strip_tool=x86_64-w64-mingw32-strip
