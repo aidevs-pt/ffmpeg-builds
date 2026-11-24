@@ -40,7 +40,7 @@ case $target in
     # Static libraries: without FRIBIDI_LIB_STATIC, fribidi's headers ask for DLL imports.
     export CFLAGS="-O2 -DFRIBIDI_LIB_STATIC" CXXFLAGS="-O2" LDFLAGS="-static -static-libgcc -static-libstdc++"
     host="--host=$triple"
-    cross="--arch=x86_64 --target-os=mingw32 --cross-prefix=$triple- --cc=$CC --cxx=$CXX"
+    cross="--arch=x86_64 --target-os=mingw32 --cross-prefix=$triple- --cc=$CC --cxx=$CXX --pkg-config=pkg-config"
     cat > "$work/cross.ini" <<EOF
 [binaries]
 c = '$CC'
