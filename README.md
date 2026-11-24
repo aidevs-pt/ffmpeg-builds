@@ -63,5 +63,5 @@ security problems privately as [SECURITY.md](SECURITY.md) explains.
 
 ---
 
-Maintained by [DEVS AI Unipessoal LDA](https://aidevs.pt). Need custom AI solutions? Visit
+Maintained by [DEVS.AI UNIPESSOAL LDA](https://aidevs.pt). Need custom AI solutions? Visit
 [aidevs.pt](https://aidevs.pt).
