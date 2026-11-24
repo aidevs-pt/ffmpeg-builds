@@ -1,0 +1,12 @@
+# Every source the build downloads, pinned by SHA-256. Format: name version sha256 url
+ffmpeg 9.1 1a4d394ae63d190a526cd052eb4415c156b5c5e2df37efab41a7de0b8fde2433 https://ffmpeg.org/releases/ffmpeg-9.1.tar.xz
+x264 b35605ace3ddf7c1a5d67a2eb553f034aef41d55 6eeb82934e69fd51e043bd8c5b0d152839638d1ce7aa4eea65a3fedcf83ff224 https://code.videolan.org/videolan/x264/-/archive/b35605ace3ddf7c1a5d67a2eb553f034aef41d55/x264-b35605ace3ddf7c1a5d67a2eb553f034aef41d55.tar.bz2
+lame 3.100 ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e https://sourceforge.net/projects/lame/files/lame/3.100/lame-3.100.tar.gz/download
+zlib 1.4 4f11c512053d7bab8d9e9b89bde3575add3e4c50a383b42ef6cb837035fc5a7c https://github.com/madler/zlib/releases/download/v1.4/zlib-1.4.tar.xz
+freetype 2.15.0 93cd47eb719c325107f2d3cf087d06299e944c3b48a40b55537302304dea1dd5 https://download.savannah.gnu.org/releases/freetype/freetype-2.15.0.tar.xz
+harfbuzz 15.2.0 e2ec49090744383cdbe7df808c1cedaafba06a97be8dc4211fe546ba585f12cb https://github.com/harfbuzz/harfbuzz/releases/download/15.2.0/harfbuzz-15.2.0.tar.xz
+fribidi 1.0.18 1de5e8073d035388b71d0b2d452b1da1f8caeea8a7702997b401fe1b6250727f https://github.com/fribidi/fribidi/releases/download/v1.0.18/fribidi-1.0.18.tar.xz
+expat 2.11.0 61e7614b602201c28a189dafee78f5bceaee192bbde46a930752ff09cf5542fa https://github.com/libexpat/libexpat/releases/download/R_2_11_0/expat-2.11.0.tar.xz
+fontconfig 2.18.4 95013637eff5f81d4871dd16cd098c273264c16d0f9f0b27cc43b81b2794bee3 https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/2.18.4/fontconfig-2.18.4.tar.xz
+libass 0.17.5 2dca25c0e0c837ddf00b52011b3f82cac1e4ddd3ad018227806b0c2288864acc https://github.com/libass/libass/releases/download/0.17.5/libass-0.17.5.tar.xz
+dav1d 1.5.5 ca96b1d0ba3f01f55de7231d775892b64994ba061aaeeaaa4f662a390b3abf9e https://downloads.videolan.org/pub/videolan/dav1d/1.5.5/dav1d-1.5.5.tar.xz

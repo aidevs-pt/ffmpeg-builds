@@ -1,0 +1,130 @@
+# Builds and tests every target on each change. Pushing a tag such as v9.1-1 (FFmpeg version and
+# build number) also publishes a release with the binaries, their checksums and every source.
+name: Build
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The oldest supported Ubuntu sets the glibc these binaries need.
+          - target: linux-x64
+            os: ubuntu-22.04
+          - target: windows-x64
+            os: ubuntu-24.04
+          - target: macos-arm64
+            os: macos-15
+          - target: macos-x64
+            os: macos-15-intel
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python -m pip install meson==1.12.1 ninja==1.13.2
+      - if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nasm gperf pkg-config
+      - if: matrix.target == 'windows-x64'
+        run: sudo apt-get install -y mingw-w64
+      - if: runner.os == 'macOS'
+        run: brew install nasm pkgconf
+      - uses: actions/cache@v6
+        with:
+          path: cache
+          key: sources-${{ hashFiles('sources.txt') }}
+      - run: ./fetch-sources.sh
+      - run: ./build.sh ${{ matrix.target }} out/${{ matrix.target }}
+      - if: matrix.target != 'windows-x64'
+        run: ./smoke-test.sh out/${{ matrix.target }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.target }}
+          path: out/${{ matrix.target }}
+
+  test-windows:
+    needs: build
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: windows-x64
+          path: out/windows-x64
+      - run: ./smoke-test.sh out/windows-x64
+
+  # One macOS download that runs natively on Apple silicon and Intel Macs.
+  macos-universal:
+    needs: build
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: macos-*
+          path: out
+      - run: |
+          mkdir -p out/macos-universal
+          for tool in ffmpeg ffprobe; do
+            lipo -create out/macos-arm64/$tool out/macos-x64/$tool -output out/macos-universal/$tool
+            chmod +x out/macos-universal/$tool
+          done
+          cp -R out/macos-arm64/licenses out/macos-universal/licenses
+          cp out/macos-arm64/BUILD.txt out/macos-universal/BUILD.txt
+          lipo -info out/macos-universal/ffmpeg
+      - run: ./smoke-test.sh out/macos-universal
+      - uses: actions/upload-artifact@v7
+        with:
+          name: macos-universal
+          path: out/macos-universal
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, test-windows, macos-universal]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          path: out
+      - uses: actions/cache@v6
+        with:
+          path: cache
+          key: sources-${{ hashFiles('sources.txt') }}
+      - run: ./fetch-sources.sh
+      - name: Package
+        run: |
+          version=$(awk '$1 == "ffmpeg" { print $2 }' sources.txt)
+          mkdir dist
+          for target in linux-x64 windows-x64 macos-arm64 macos-x64 macos-universal; do
+            chmod +x out/$target/ffmpeg* out/$target/ffprobe*
+            (cd out/$target && zip -qr9 "$GITHUB_WORKSPACE/dist/ffmpeg-$version-$target.zip" .)
+          done
+          # The exact sources of every binary, as the GPL asks.
+          grep -v '^#' sources.txt | while read -r name ver sha url; do
+            extension=${url%/download}; extension=${extension##*.tar.}
+            cp "cache/$name-$ver.archive" "dist/source-$name-$ver.tar.$extension"
+          done
+          cp sources.txt build.sh fetch-sources.sh dist/
+          (cd dist && sha256sum * > SHA256SUMS)
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* --title "FFmpeg ${GITHUB_REF_NAME#v}" \
+            --notes "Static FFmpeg and ffprobe for Linux x64, Windows x64 and macOS (Apple silicon, Intel and universal), built by build.sh from the sources attached here. GPL-2.0-or-later; see licenses/ in each archive."
