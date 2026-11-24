@@ -1,0 +1,31 @@
+name: Bug report
+description: A build fails, crashes or is missing something the README says it includes
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Security problems go to SECURITY.md instead, never here.
+        You can write in English, Spanish or Portuguese.
+  - type: input
+    id: download
+    attributes:
+      label: Download and release
+      description: For example ffmpeg-9.1-windows-x64.zip from v9.1-1.
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system
+      description: For example Windows 11 24H2, macOS 15.4 on Apple silicon or Ubuntu 24.04.
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command you ran, what you expected, and what happened instead.
+      render: text
+    validations:
+      required: true

@@ -57,7 +57,9 @@ checksum of the new archive.
 
 ## Contributing
 
-Issues and pull requests are welcome. Please describe the platform and the command that failed.
+Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first; the first
+time you contribute, a bot asks you to sign the [Contributor License Agreement](CLA.md). Report
+security problems privately as [SECURITY.md](SECURITY.md) explains.
 
 ---
 

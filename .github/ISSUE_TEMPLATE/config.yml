@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/aidevs-pt/ffmpeg-builds/security/advisories/new
+    about: Please report security problems privately, never in a public issue.
+  - name: FFmpeg bugs
+    url: https://ffmpeg.org/bugreports.html
+    about: Problems in FFmpeg itself that happen with every build go to the FFmpeg project.

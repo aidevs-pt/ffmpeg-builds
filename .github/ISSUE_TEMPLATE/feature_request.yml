@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest a codec, filter or platform
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What you need
+      description: What you want to do with FFmpeg that these builds can't do yet.
+    validations:
+      required: true
+  - type: textarea
+    id: license
+    attributes:
+      label: License
+      description: The license of any library it needs. Builds only include libraries that can be redistributed.
