@@ -1,0 +1,1 @@
+CLA signatures for aidevs-pt/ffmpeg-builds, recorded by the CLA workflow.
