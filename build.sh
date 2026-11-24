@@ -86,11 +86,11 @@ meson_lib() { # name meson-options...
     --default-library=static $meson_cross "$@" && ninja -C build -j"$jobs" && ninja -C build install)
 }
 
-# zlib: PNG, which Arrumo uses for stills and cards.
+# zlib: PNG, for stills and image sequences.
 dir=$(source_dir zlib)
 (cd "$dir" && if [ "$target" = windows-x64 ]; then CHOST=x86_64-w64-mingw32 ./configure --prefix="$prefix" --static; else ./configure --prefix="$prefix" --static; fi && make -j"$jobs" && make install)
 
-# x264: H.264, the format of every preview and final render.
+# x264: H.264, the most widely playable video format.
 dir=$(source_dir x264)
 (cd "$dir" && ./configure --prefix="$prefix" --enable-static --disable-cli --enable-pic \
   $host $([ "$target" = windows-x64 ] && echo --cross-prefix=x86_64-w64-mingw32-) && make -j"$jobs" && make install)
